@@ -15,4 +15,9 @@ public class Returns {
     public long getOrderNumber() {
         return orderNumber;
     }
+
+    @Override
+    public String toString() {
+        return "Returns{" + "orderNumber=" + orderNumber + '}';
+    }
 }

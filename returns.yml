@@ -1,7 +1,15 @@
 consul:
   endpoint: localhost:8500
 
-downstream:
+billingDownstream:
+  serviceName: billing
+  refreshInterval: 10 seconds
+
+shippingDownstream:
+  serviceName: shipping
+  refreshInterval: 10 seconds
+
+returnsDownstream:
   serviceName: returns
   refreshInterval: 10 seconds
 
@@ -23,11 +31,11 @@ server:
         target: stdout
 
 logging:
-  level: DEBUG
+  level: INFO
   loggers:
-    com.smoketurner.dropwizard.consul: DEBUG
+    com.smoketurner.dropwizard.consul: INFO
     nl.rabobank.microservices.returns: DEBUG
-    com.netflix.loadbalancer: DEBUG
+    com.netflix.loadbalancer: INFO
   appenders:
     - type: console
       timeZone: UTC

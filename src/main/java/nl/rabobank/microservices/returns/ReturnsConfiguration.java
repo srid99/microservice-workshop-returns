@@ -17,7 +17,15 @@ public class ReturnsConfiguration extends Configuration {
 
     @NotNull
     @Valid
-    public final RibbonLoadBalancerConfiguration downstream = new RibbonLoadBalancerConfiguration();
+    public final RibbonLoadBalancerConfiguration billingDownstream = new RibbonLoadBalancerConfiguration();
+
+    @NotNull
+    @Valid
+    public final RibbonLoadBalancerConfiguration shippingDownstream = new RibbonLoadBalancerConfiguration();
+
+    @NotNull
+    @Valid
+    public final RibbonLoadBalancerConfiguration returnsDownstream = new RibbonLoadBalancerConfiguration();
 
     @JsonProperty
     public ConsulFactory getConsulFactory() {
@@ -25,7 +33,17 @@ public class ReturnsConfiguration extends Configuration {
     }
 
     @JsonProperty
-    public RibbonLoadBalancerConfiguration getDownstream() {
-        return downstream;
+    public RibbonLoadBalancerConfiguration getBillingDownstream() {
+        return billingDownstream;
+    }
+
+    @JsonProperty
+    public RibbonLoadBalancerConfiguration getShippingDownstream() {
+        return shippingDownstream;
+    }
+
+    @JsonProperty
+    public RibbonLoadBalancerConfiguration getReturnsDownstream() {
+        return returnsDownstream;
     }
 }

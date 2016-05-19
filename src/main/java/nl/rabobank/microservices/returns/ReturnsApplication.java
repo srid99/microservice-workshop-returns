@@ -34,12 +34,12 @@ public class ReturnsApplication extends Application<ReturnsConfiguration> {
 
     @Override
     public void run(ReturnsConfiguration configuration, Environment environment) throws Exception {
-
         final Consul consul = configuration.getConsulFactory().build();
         final RibbonJerseyClientBuilder builder = new RibbonJerseyClientBuilder(environment, consul);
-        final RibbonJerseyClient loadBalancingClient = builder.build(configuration.getDownstream());
+        final RibbonJerseyClient loadBalancingClient = builder.build(configuration.getReturnsDownstream());
 
         final ReturnsResource resource = new ReturnsResource(loadBalancingClient);
+
         environment.jersey().register(resource);
     }
 }
