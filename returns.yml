@@ -34,8 +34,8 @@ logging:
   level: INFO
   loggers:
     com.smoketurner.dropwizard.consul: INFO
-    nl.rabobank.microservices.returns: DEBUG
     com.netflix.loadbalancer: INFO
+    in.srid.microservices.returns: DEBUG
   appenders:
     - type: console
       timeZone: UTC

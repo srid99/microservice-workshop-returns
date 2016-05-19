@@ -1,4 +1,4 @@
-package nl.rabobank.microservices.returns.api;
+package in.srid.microservices.returns.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

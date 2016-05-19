@@ -1,4 +1,4 @@
-package nl.rabobank.microservices.returns;
+package in.srid.microservices.returns;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

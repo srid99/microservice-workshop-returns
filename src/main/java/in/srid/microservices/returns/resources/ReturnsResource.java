@@ -1,4 +1,4 @@
-package nl.rabobank.microservices.returns.resources;
+package in.srid.microservices.returns.resources;
 
 import java.util.List;
 
@@ -11,14 +11,13 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
+import in.srid.microservices.returns.api.Returns;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
 import com.netflix.loadbalancer.Server;
 import com.smoketurner.dropwizard.consul.ribbon.RibbonJerseyClient;
-
-import nl.rabobank.microservices.returns.api.Returns;
 
 @Path("/returns")
 @Produces(MediaType.APPLICATION_JSON)

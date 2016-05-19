@@ -1,4 +1,4 @@
-package nl.rabobank.microservices.returns;
+package in.srid.microservices.returns;
 
 import com.orbitz.consul.Consul;
 import com.smoketurner.dropwizard.consul.ConsulBundle;
@@ -6,10 +6,10 @@ import com.smoketurner.dropwizard.consul.ConsulFactory;
 import com.smoketurner.dropwizard.consul.ribbon.RibbonJerseyClient;
 import com.smoketurner.dropwizard.consul.ribbon.RibbonJerseyClientBuilder;
 
+import in.srid.microservices.returns.resources.ReturnsResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import nl.rabobank.microservices.returns.resources.ReturnsResource;
 
 public class ReturnsApplication extends Application<ReturnsConfiguration> {
 
