@@ -40,3 +40,8 @@ logging:
     - type: console
       timeZone: UTC
       target: stdout
+
+swagger:
+  resourcePackage: nl.rabobank.microservices.returns.resources
+
+

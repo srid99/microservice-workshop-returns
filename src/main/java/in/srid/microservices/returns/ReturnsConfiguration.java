@@ -8,6 +8,7 @@ import com.smoketurner.dropwizard.consul.ConsulFactory;
 import com.smoketurner.dropwizard.consul.ribbon.RibbonLoadBalancerConfiguration;
 
 import io.dropwizard.Configuration;
+import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 
 public class ReturnsConfiguration extends Configuration {
 
@@ -46,4 +47,7 @@ public class ReturnsConfiguration extends Configuration {
     public RibbonLoadBalancerConfiguration getReturnsDownstream() {
         return returnsDownstream;
     }
+    
+    @JsonProperty("swagger")
+    public SwaggerBundleConfiguration swaggerBundleConfiguration;
 }

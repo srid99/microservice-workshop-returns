@@ -15,9 +15,14 @@ import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+
 import in.srid.microservices.returns.api.Returns;
 
+
 @Path("/returns")
+@Api(value="returns")
 @Produces(MediaType.APPLICATION_JSON)
 public class ReturnsResource {
     private static final Logger LOG = LoggerFactory.getLogger(ReturnsResource.class);
@@ -28,7 +33,14 @@ public class ReturnsResource {
         this.client = client;
     }
 
+    /**
+     * Some text to see if swagger works
+     * @return some list
+     */
     @GET
+    @ApiOperation(
+    		value="Get available servers for testing purposes",
+    		notes="Only for testing")
     @Timed
     @Path("/test")
     public Returns testRibbon() {
@@ -40,6 +52,10 @@ public class ReturnsResource {
         return path.request().post(Entity.json(new Returns(1)), Returns.class);
     }
 
+    @ApiOperation(
+            value = "Return an order",
+            notes = "Simply post a returns object"
+    )
     @POST
     @Timed
     @Consumes(MediaType.APPLICATION_JSON)

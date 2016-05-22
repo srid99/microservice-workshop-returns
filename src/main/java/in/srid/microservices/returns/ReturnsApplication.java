@@ -1,5 +1,11 @@
 package in.srid.microservices.returns;
 
+import io.dropwizard.Application;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
+import io.federecio.dropwizard.swagger.SwaggerBundle;
+import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
+
 import com.orbitz.consul.Consul;
 import com.smoketurner.dropwizard.consul.ConsulBundle;
 import com.smoketurner.dropwizard.consul.ConsulFactory;
@@ -7,9 +13,6 @@ import com.smoketurner.dropwizard.consul.ribbon.RibbonJerseyClient;
 import com.smoketurner.dropwizard.consul.ribbon.RibbonJerseyClientBuilder;
 
 import in.srid.microservices.returns.resources.ReturnsResource;
-import io.dropwizard.Application;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
 
 public class ReturnsApplication extends Application<ReturnsConfiguration> {
 
@@ -28,6 +31,13 @@ public class ReturnsApplication extends Application<ReturnsConfiguration> {
             @Override
             public ConsulFactory getConsulFactory(ReturnsConfiguration configuration) {
                 return configuration.getConsulFactory();
+            }
+        });
+        
+        bootstrap.addBundle(new SwaggerBundle<ReturnsConfiguration>() {
+            @Override
+            protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(ReturnsConfiguration configuration) {
+                return configuration.swaggerBundleConfiguration;
             }
         });
     }
