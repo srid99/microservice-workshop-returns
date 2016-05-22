@@ -42,6 +42,6 @@ logging:
       target: stdout
 
 swagger:
-  resourcePackage: nl.rabobank.microservices.returns.resources
+  resourcePackage: in.srid.microservices.returns.resources
 
 
