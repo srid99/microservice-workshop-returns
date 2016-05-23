@@ -1,5 +1,7 @@
 package in.srid.microservices.returns;
 
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -78,6 +80,7 @@ public class ReturnsApplication extends Application<ReturnsConfiguration> {
 
         reporter(consul, metrics).start(5, TimeUnit.SECONDS);
 
+        environment.getObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
         environment.jersey().register(resource);
     }
 
@@ -85,7 +88,8 @@ public class ReturnsApplication extends Application<ReturnsConfiguration> {
                                       final RibbonLoadBalancerConfiguration downstream) {
         final JerseyClientConfiguration jerseyConfig = new JerseyClientConfiguration();
         jerseyConfig.setGzipEnabled(false);
-        final Client jerseyClient = new JerseyClientBuilder(environment).using(jerseyConfig).build(downstream.getServiceName());
+        final Client jerseyClient =
+                new JerseyClientBuilder(environment).using(jerseyConfig).build(downstream.getServiceName());
         return new RibbonJerseyClientBuilder(environment, consul).build(downstream, jerseyClient);
     }
 
