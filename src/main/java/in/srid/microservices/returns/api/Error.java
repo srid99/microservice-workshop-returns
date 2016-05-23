@@ -5,19 +5,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Error {
     private final int code;
-    private final String message;
+    private final String description;
 
     @JsonCreator
-    public Error(@JsonProperty("code") final int code, @JsonProperty("message") final String message) {
+    public Error(@JsonProperty("code") final int code, @JsonProperty("description") final String description) {
         this.code = code;
-        this.message = message;
+        this.description = description;
     }
 
     public int getCode() {
         return code;
     }
 
-    public String getMessage() {
-        return message;
+    public String getDescription() {
+        return description;
     }
 }

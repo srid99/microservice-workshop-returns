@@ -71,7 +71,7 @@ public class ReturnsResourceIT {
         final Error error = response.readEntity(Error.class);
         assertThat(response.getStatus(), is(500));
         assertThat(error.getCode(), is(100));
-        assertThat(error.getMessage(), is("Shipping could not be returned"));
+        assertThat(error.getDescription(), is("Shipping could not be returned"));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class ReturnsResourceIT {
         final Error error = response.readEntity(Error.class);
         assertThat(response.getStatus(), is(500));
         assertThat(error.getCode(), is(100));
-        assertThat(error.getMessage(), is("Billing could not be returned"));
+        assertThat(error.getDescription(), is("Billing could not be returned"));
     }
 
     @Test
@@ -100,7 +100,7 @@ public class ReturnsResourceIT {
         final Error error = response.readEntity(Error.class);
         assertThat(response.getStatus(), is(500));
         assertThat(error.getCode(), is(100));
-        assertThat(error.getMessage(), is("Shipping could not be returned"));
+        assertThat(error.getDescription(), is("Shipping could not be returned"));
     }
 
     @Test
@@ -116,7 +116,7 @@ public class ReturnsResourceIT {
         final Error error = response.readEntity(Error.class);
         assertThat(response.getStatus(), is(500));
         assertThat(error.getCode(), is(100));
-        assertThat(error.getMessage(), is("Billing could not be returned"));
+        assertThat(error.getDescription(), is("Billing could not be returned"));
     }
 
     private void stubShippingResponse(final String state) {
