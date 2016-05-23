@@ -20,6 +20,7 @@ import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.junit.ClassRule;
 import org.junit.Test;
 
+import com.codahale.metrics.SharedMetricRegistries;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.netflix.loadbalancer.Server;
 import com.netflix.loadbalancer.ZoneAwareLoadBalancer;
@@ -43,7 +44,7 @@ public class ReturnsResourceIT {
 
     @ClassRule
     public static final ResourceTestRule RULE = ResourceTestRule.builder()
-        .addResource(new ReturnsResource(CLIENT, CLIENT)) //
+        .addResource(new ReturnsResource(SharedMetricRegistries.getOrCreate("dummy"), CLIENT, CLIENT)) //
         .setTestContainerFactory(new GrizzlyWebTestContainerFactory()) //
         .build();
 

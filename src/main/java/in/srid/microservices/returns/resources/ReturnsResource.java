@@ -1,5 +1,6 @@
 package in.srid.microservices.returns.resources;
 
+import static com.codahale.metrics.MetricRegistry.name;
 import static javax.ws.rs.client.Entity.json;
 
 import javax.ws.rs.Consumes;
@@ -15,7 +16,8 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.codahale.metrics.annotation.Timed;
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.MetricRegistry;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixObservableCommand;
 import com.wordnik.swagger.annotations.Api;
@@ -38,28 +40,41 @@ public class ReturnsResource {
     private final Client shippingClient;
     private final Client billingClient;
 
-    public ReturnsResource(Client shippingClient, Client billingClient) {
+    private final Counter returnsTotalCounter;
+    private final Counter returnsOkCounter;
+    private final Counter returnsErrorCounter;
+
+    public ReturnsResource(final MetricRegistry metrics, Client shippingClient, Client billingClient) {
         this.shippingClient = shippingClient;
         this.billingClient = billingClient;
+
+        returnsTotalCounter = metrics.counter(name("total"));
+        returnsOkCounter = metrics.counter(name("ok"));
+        returnsErrorCounter = metrics.counter(name("failed"));
     }
 
     @POST
-    @Timed
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Return an order", notes = "Simply post a returns object")
     public Response returns(Returns returns) {
+        returnsTotalCounter.inc();
+
         final Observable<State> shipping = new ShippingStateCommand(shippingClient, returns).observe();
         final Observable<State> billing = new BillingStateCommand(billingClient, returns).observe();
 
         return Observable.zip(shipping, billing, (shippingState, billingState) -> {
             if (!shippingState.isValid()) {
+                returnsErrorCounter.inc();
                 LOG.warn("Shipping state [{}] is not valid", shippingState);
                 return errorResponse("Shipping could not be returned");
             }
             if (!billingState.isValid()) {
+                returnsErrorCounter.inc();
                 LOG.warn("Billing state [{}] is not valid", billingState);
                 return errorResponse("Billing could not be returned");
             }
+
+            returnsOkCounter.inc();
             return Response.ok(returns).build();
         }).toBlocking().first();
     }

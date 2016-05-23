@@ -16,7 +16,6 @@ import com.codahale.metrics.Slf4jReporter;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.HealthClient;
 import com.orbitz.consul.model.ConsulResponse;
-import com.orbitz.consul.model.health.Service;
 import com.orbitz.consul.model.health.ServiceHealth;
 import com.smoketurner.dropwizard.consul.ConsulBundle;
 import com.smoketurner.dropwizard.consul.ConsulFactory;
@@ -72,9 +71,11 @@ public class ReturnsApplication extends Application<ReturnsConfiguration> {
         final RibbonLoadBalancerConfiguration shipping = configuration.getShippingDownstream();
         final RibbonJerseyClient shippingClient = new RibbonJerseyClientBuilder(environment, consul).build(shipping);
 
-        final ReturnsResource resource = new ReturnsResource(shippingClient, billingClient);
+        final MetricRegistry metrics = environment.metrics();
 
-        reporter(consul, environment.metrics()).start(15, TimeUnit.SECONDS);
+        final ReturnsResource resource = new ReturnsResource(metrics, shippingClient, billingClient);
+
+        reporter(consul, metrics).start(5, TimeUnit.SECONDS);
 
         environment.jersey().register(resource);
     }
@@ -84,9 +85,11 @@ public class ReturnsApplication extends Application<ReturnsConfiguration> {
         final ConsulResponse<List<ServiceHealth>> metrics = healthClient.getAllServiceInstances("metrics");
 
         if (!metrics.getResponse().isEmpty()) {
-            final Service service = metrics.getResponse().get(0).getService();
-            LOG.info("StatsD server[{}:{}] found", service.getAddress(), service.getPort());
-            final Statsd statsd = new Statsd(service.getAddress(), service.getPort());
+            final ServiceHealth serviceHealth = metrics.getResponse().get(0);
+            final String host = serviceHealth.getNode().getAddress();
+            final int port = serviceHealth.getService().getPort();
+            LOG.info("StatsD server[{}:{}] found", host, port);
+            final Statsd statsd = new Statsd(host, port);
 
             return StatsdReporter.forRegistry(metricRegistry) //
                 .prefixedWith("returns") //
