@@ -3,6 +3,8 @@ package in.srid.microservices.returns;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.ws.rs.client.Client;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zapodot.hystrix.bundle.HystrixBundle;
@@ -25,6 +27,8 @@ import com.smoketurner.dropwizard.consul.ribbon.RibbonLoadBalancerConfiguration;
 
 import in.srid.microservices.returns.resources.ReturnsResource;
 import io.dropwizard.Application;
+import io.dropwizard.client.JerseyClientBuilder;
+import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.federecio.dropwizard.swagger.SwaggerBundle;
@@ -65,11 +69,8 @@ public class ReturnsApplication extends Application<ReturnsConfiguration> {
     public void run(ReturnsConfiguration configuration, Environment environment) throws Exception {
         final Consul consul = configuration.getConsulFactory().build();
 
-        final RibbonLoadBalancerConfiguration billing = configuration.getBillingDownstream();
-        final RibbonJerseyClient billingClient = new RibbonJerseyClientBuilder(environment, consul).build(billing);
-
-        final RibbonLoadBalancerConfiguration shipping = configuration.getShippingDownstream();
-        final RibbonJerseyClient shippingClient = new RibbonJerseyClientBuilder(environment, consul).build(shipping);
+        final RibbonJerseyClient billingClient = client(environment, consul, configuration.getBillingDownstream());
+        final RibbonJerseyClient shippingClient = client(environment, consul, configuration.getShippingDownstream());
 
         final MetricRegistry metrics = environment.metrics();
 
@@ -78,6 +79,14 @@ public class ReturnsApplication extends Application<ReturnsConfiguration> {
         reporter(consul, metrics).start(5, TimeUnit.SECONDS);
 
         environment.jersey().register(resource);
+    }
+
+    private RibbonJerseyClient client(final Environment environment, final Consul consul,
+                                      final RibbonLoadBalancerConfiguration downstream) {
+        final JerseyClientConfiguration jerseyConfig = new JerseyClientConfiguration();
+        jerseyConfig.setGzipEnabled(false);
+        final Client jerseyClient = new JerseyClientBuilder(environment).using(jerseyConfig).build(downstream.getServiceName());
+        return new RibbonJerseyClientBuilder(environment, consul).build(downstream, jerseyClient);
     }
 
     private ScheduledReporter reporter(final Consul consul, final MetricRegistry metricRegistry) {

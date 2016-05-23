@@ -8,6 +8,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.InvocationCallback;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -119,9 +120,15 @@ public class ReturnsResource {
                 @Override
                 public void call(Subscriber<? super State> subscriber) {
                     final WebTarget target = client.target(CONSUL_URL).path(path);
-                    target.request().async().post(json(returns), new InvocationCallback<State>() {
+                    final Entity<Returns> json = json(returns);
+
+                    LOG.debug("URL used [{}]", target.getUri());
+                    LOG.debug("Entity [{}]", json);
+
+                    target.request().async().post(json, new InvocationCallback<State>() {
                         @Override
                         public void completed(State response) {
+                            LOG.debug("Service [{}] completed successfully!", path);
                             if (!subscriber.isUnsubscribed()) {
                                 subscriber.onNext(response);
                                 subscriber.onCompleted();
@@ -130,6 +137,7 @@ public class ReturnsResource {
 
                         @Override
                         public void failed(Throwable throwable) {
+                            LOG.debug("Service [{}] failed. Reason: {}", path, throwable.getMessage());
                             if (!subscriber.isUnsubscribed()) {
                                 subscriber.onError(throwable);
                             }
@@ -144,6 +152,7 @@ public class ReturnsResource {
             return Observable.create(new Observable.OnSubscribe<State>() {
                 @Override
                 public void call(final Subscriber<? super State> subscriber) {
+                    LOG.debug("Service [{}] failed! Fallbacks to default...", path);
                     if (!subscriber.isUnsubscribed()) {
                         subscriber.onNext(FALLBACK_STATE);
                         subscriber.onCompleted();
