@@ -1,5 +1,5 @@
 consul:
-  endpoint: localhost:8500
+  endpoint: 172.17.0.1:8500
 
 billingDownstream:
   serviceName: billing

@@ -50,13 +50,6 @@ public class ReturnsApplication extends Application<ReturnsConfiguration> {
 
     @Override
     public void initialize(Bootstrap<ReturnsConfiguration> bootstrap) {
-        bootstrap.addBundle(new ConsulBundle<ReturnsConfiguration>(getName()) {
-            @Override
-            public ConsulFactory getConsulFactory(ReturnsConfiguration configuration) {
-                return configuration.getConsulFactory();
-            }
-        });
-
         bootstrap.addBundle(new SwaggerBundle<ReturnsConfiguration>() {
             @Override
             protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(ReturnsConfiguration configuration) {
@@ -69,7 +62,10 @@ public class ReturnsApplication extends Application<ReturnsConfiguration> {
 
     @Override
     public void run(ReturnsConfiguration configuration, Environment environment) throws Exception {
-        final Consul consul = configuration.getConsulFactory().build();
+        final ConsulFactory consulFactory = configuration.getConsulFactory();
+        LOG.debug("Consul server endpoint[{}] found", consulFactory.getEndpoint());
+
+        final Consul consul = consulFactory.build();
 
         final RibbonJerseyClient billingClient = client(environment, consul, configuration.getBillingDownstream());
         final RibbonJerseyClient shippingClient = client(environment, consul, configuration.getShippingDownstream());
