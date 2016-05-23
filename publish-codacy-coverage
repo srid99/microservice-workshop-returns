@@ -1,0 +1,7 @@
+#!/bin/sh
+
+: ${CODACY_PROJECT_TOKEN?"Need to set environment variable CODACY_PROJECT_TOKEN"}
+
+curl https://www.jpm4j.org/install/script | sh
+
+codacy-coverage-reporter -l Java -r target/site/jacoco/jacoco.xml

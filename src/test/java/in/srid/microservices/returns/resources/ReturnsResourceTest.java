@@ -30,7 +30,7 @@ import in.srid.microservices.returns.api.Error;
 import in.srid.microservices.returns.api.Returns;
 import io.dropwizard.testing.junit.ResourceTestRule;
 
-public class ReturnsResourceIT {
+public class ReturnsResourceTest {
     private static final int CLIENT_PORT = freePort();
     private static final Server SERVER = new Server("localhost", CLIENT_PORT);
     private static final ZoneAwareLoadBalancer<Server> LOAD_BALANCER = new ZoneAwareLoadBalancer<Server>() {

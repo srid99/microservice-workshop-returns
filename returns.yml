@@ -27,9 +27,9 @@ server:
         target: stdout
 
 logging:
-  level: INFO
+  level: ERROR
   loggers:
-    com.smoketurner.dropwizard.consul: INFO
+    com.smoketurner.dropwizard.consul: ERROR
     com.netflix.loadbalancer: ERROR
     in.srid.microservices.returns: DEBUG
   appenders:
