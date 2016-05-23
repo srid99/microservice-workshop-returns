@@ -1,6 +1,5 @@
 package in.srid.microservices.returns;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,41 +12,42 @@ import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 public class ReturnsConfiguration extends Configuration {
 
     @NotNull
-    @Valid
-    public final ConsulFactory consul = new ConsulFactory();
-
-    @NotNull
-    @Valid
-    public final RibbonLoadBalancerConfiguration billingDownstream = new RibbonLoadBalancerConfiguration();
-
-    @NotNull
-    @Valid
-    public final RibbonLoadBalancerConfiguration shippingDownstream = new RibbonLoadBalancerConfiguration();
-
-    @NotNull
-    @Valid
-    public final RibbonLoadBalancerConfiguration returnsDownstream = new RibbonLoadBalancerConfiguration();
-
     @JsonProperty
+    private final ConsulFactory consul = new ConsulFactory();
+
+    @NotNull
+    @JsonProperty
+    private final RibbonLoadBalancerConfiguration billingDownstream = new RibbonLoadBalancerConfiguration();
+
+    @NotNull
+    @JsonProperty
+    private final RibbonLoadBalancerConfiguration shippingDownstream = new RibbonLoadBalancerConfiguration();
+
+    @NotNull
+    @JsonProperty
+    private final RibbonLoadBalancerConfiguration returnsDownstream = new RibbonLoadBalancerConfiguration();
+
+    @NotNull
+    @JsonProperty
+    private final SwaggerBundleConfiguration swagger = new SwaggerBundleConfiguration();
+
     public ConsulFactory getConsulFactory() {
         return consul;
     }
 
-    @JsonProperty
     public RibbonLoadBalancerConfiguration getBillingDownstream() {
         return billingDownstream;
     }
 
-    @JsonProperty
     public RibbonLoadBalancerConfiguration getShippingDownstream() {
         return shippingDownstream;
     }
 
-    @JsonProperty
     public RibbonLoadBalancerConfiguration getReturnsDownstream() {
         return returnsDownstream;
     }
-    
-    @JsonProperty("swagger")
-    public SwaggerBundleConfiguration swaggerBundleConfiguration;
+
+    public SwaggerBundleConfiguration getSwaggerBundleConfiguration() {
+        return swagger;
+    }
 }

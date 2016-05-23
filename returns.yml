@@ -9,10 +9,6 @@ shippingDownstream:
   serviceName: shipping
   refreshInterval: 10 seconds
 
-returnsDownstream:
-  serviceName: returns
-  refreshInterval: 10 seconds
-
 # HTTP-specific options.
 server:
 
@@ -34,7 +30,7 @@ logging:
   level: INFO
   loggers:
     com.smoketurner.dropwizard.consul: INFO
-    com.netflix.loadbalancer: INFO
+    com.netflix.loadbalancer: ERROR
     in.srid.microservices.returns: DEBUG
   appenders:
     - type: console
@@ -43,5 +39,3 @@ logging:
 
 swagger:
   resourcePackage: in.srid.microservices.returns.resources
-
-

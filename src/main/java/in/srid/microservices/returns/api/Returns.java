@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Returns {
-    private long orderNumber;
+    private final long orderNumber;
 
     @JsonCreator
     public Returns(@JsonProperty("orderNumber") long orderNumber) {
