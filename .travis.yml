@@ -1,8 +1,6 @@
 language: java
 jdk:
   - oraclejdk8
-script: mvn test jacoco:report
-after_success: ./publish-codacy-coverage
 
 sudo: required
 services:
@@ -12,8 +10,11 @@ install:
   - docker login --email=$DOCKER_HUB_EMAIL --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
 
 script:
+  - mvn package jacoco:report
   - docker build -t $DOCKER_IMAGE_NAME .
   - if [ ! -z "$TRAVIS_TAG" ]; then docker tag $DOCKER_IMAGE_NAME:latest $DOCKER_IMAGE_NAME:$TRAVIS_TAG; fi && docker push $DOCKER_IMAGE_NAME
 
 env:
   - DOCKER_IMAGE_NAME=srid99/microservices-workshop
+
+after_success: ./publish-codacy-coverage
